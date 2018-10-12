@@ -10,7 +10,7 @@ print(len(network['Source']))
 
 # %%
 G = nx.Graph()
-for i, gene in enumerate(network['Source'][:100000]):
+for i, gene in enumerate(network['Source'][:10000]):
     G.add_edge(network['Source'][i],network['Destination'][i],weights=network['Weight'][i])
 G.number_of_nodes()
 
