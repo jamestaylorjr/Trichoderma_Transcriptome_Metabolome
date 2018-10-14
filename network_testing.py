@@ -16,6 +16,13 @@ G.number_of_nodes()
 
 # %%
 betwn = nx.betweenness_centrality(G)
-print(min(betwn))
+
+# %%
+print(min(betwn, key=betwn.get))
+print(betwn['TRIVIDRAFT_152580'])
+print(max(betwn, key=betwn.get))
+print(betwn[max(betwn, key=betwn.get)])
+for i, j, k in enumerate(betwn):
+    if k = 0.0
 # %%
 nx.draw(G)
