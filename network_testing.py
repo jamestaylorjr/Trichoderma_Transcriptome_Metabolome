@@ -10,12 +10,19 @@ print(len(network['Source']))
 
 # %%
 G = nx.Graph()
-for i, gene in enumerate(network['Source'][:100000]):
+for i, gene in enumerate(network['Source'][:10000]):
     G.add_edge(network['Source'][i],network['Destination'][i],weights=network['Weight'][i])
 G.number_of_nodes()
 
 # %%
 betwn = nx.betweenness_centrality(G)
-print(min(betwn))
+
+# %%
+print(min(betwn, key=betwn.get))
+print(betwn['TRIVIDRAFT_152580'])
+print(max(betwn, key=betwn.get))
+print(betwn[max(betwn, key=betwn.get)])
+for i, j, k in enumerate(betwn):
+    if k = 0.0
 # %%
 nx.draw(G)
