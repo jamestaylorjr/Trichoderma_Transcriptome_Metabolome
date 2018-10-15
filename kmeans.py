@@ -53,8 +53,9 @@ class KEstimator:
 
 # %%
 
-FILEPATH = "C:/Users/jimta/Documents/k_means_data_2.csv"
+FILEPATH = "C:/Users/jimta/Documents/kmeans_data.csv"
 data = pd.read_csv(FILEPATH, names =['gene','fungus','maize'])
+full_data = data
 data = data.drop(['gene'],axis=1)
 
 # %% Estimate optimal number of clusters for KMeans
@@ -93,6 +94,32 @@ for i in range(0,m_k-1):
 plt.show()
 
 # %%
-with open('kmeans_label_2.txt', 'w') as file:
+with open('kmeans_label.txt', 'w') as file:
     for i in labels:
         file.writelines(str(i)+'\n')
+
+# %%
+full_data['group'] = labels
+full_data = full_data.drop(['fungus'], axis=1)
+full_data = full_data.drop(['maize'],axis = 1)
+
+# %%
+g_names = []
+for x in range(max(labels)):
+    g_names.append("g{}".format(x))
+
+groups = pd.DataFrame(columns=g_names)
+
+# %%
+for i, g in enumerate(full_data['group']):
+    groups = groups.append({'g{}'.format(g) : full_data['gene'][i]},ignore_index=True)
+
+# %%
+group_list= []
+for g in groups:
+    holder = list(groups[g].dropna())
+    group_list.append(holder)
+
+with open('list_of_groups.txt','w') as output:
+    for i in group_list:
+        output.writelines(str(i)+'\n')
