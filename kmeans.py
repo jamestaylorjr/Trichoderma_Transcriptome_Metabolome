@@ -115,11 +115,9 @@ for i, g in enumerate(full_data['group']):
     groups = groups.append({'g{}'.format(g) : full_data['gene'][i]},ignore_index=True)
 
 # %%
-group_list= []
-for g in groups:
-    holder = list(groups[g].dropna())
-    group_list.append(holder)
+group_list= [list(groups[g].dropna()) for g in groups]
 
+# %%
 with open('list_of_groups.txt','w') as output:
     for i in group_list:
         output.writelines(str(i)+'\n')

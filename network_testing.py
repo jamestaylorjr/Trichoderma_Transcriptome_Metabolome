@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
+import statistics
 
 filename = "C:/Users/jimta/Desktop/DGE_final_geneNet.tab"
 
@@ -18,21 +19,19 @@ G.number_of_nodes()
 #betwn = nx.betweenness_centrality(G)
 with open('C:/Users/jimta/Desktop/group_test.tab','r') as file:
     sub = file.readlines()
-newsub = []
-for s in sub:
-    newsub.append(s.strip('\n'))
 
-final_sub = []
-for n in nx.nodes(G):
-    if n in newsub:
-        final_sub.append(n)
+newsub = [s.strip('\n') for s in sub]
 
-betwn = nx.betweenness_centrality_subset(G,final_sub,final_sub)
-# %%
-top5 = sorted(betwn,key=betwn.get,reverse=True)
-print(top5[:4])
-print(max(betwn, key=betwn.get))
-print(betwn[max(betwn, key=betwn.get)])
+final_sub = [n for n in newsub if n in nx.nodes(G)]
 
 # %%
-nx.draw(G)
+connect = []
+for x in final_sub:
+    btw = nx.betweenness_centrality_subset(G,[x],nx.nodes(G))
+    m = statistics.mean(btw.values())
+    connect.append(m)
+print(final_sub[connect.index(sorted(connect,reverse=True)[2])])
+print(final_sub[connect.index(max(connect))],max(connect))
+
+# %% Don't run this cell. It takes forever for very little payoff.
+#nx.draw(G)
