@@ -53,7 +53,7 @@ class KEstimator:
 
 # %%
 
-FILEPATH = "C:/Users/jimta/Documents/kmeans_data.csv"
+FILEPATH = "C:/Users/jimta/Documents/k_means_data_2.csv"
 data = pd.read_csv(FILEPATH, names =['gene','fungus','maize'])
 data = data.drop(['gene'],axis=1)
 
@@ -69,10 +69,10 @@ riddle_estimator = KEstimator()
 riddle_estimator.fit_s_k(s_k, max_k=40)
 print('riddle : {0}'.format(riddle_estimator.K))
 
-r_k = riddle_estimator.K
+m_k = riddle_estimator.K
 
 # %%
-kmeans = KMeans(n_clusters=r_k)
+kmeans = KMeans(n_clusters=m_k)
 kmeans.fit(data)
 
 labels = kmeans.predict(data)
@@ -87,12 +87,12 @@ X = [centroids[i][0] for i, j in enumerate(centroids)]
 y = [centroids[i][1] for i, j in enumerate(centroids)]
 plt.subplot(121)
 plt.scatter(X,y,c='Orange')
-for i in range(0,r_k-1):
+for i in range(0,m_k-1):
     plt.annotate(i,(X[i],y[i]))
 
 plt.show()
 
 # %%
-with open('kmeans_labels.txt', 'w') as file:
+with open('kmeans_label_2.txt', 'w') as file:
     for i in labels:
         file.writelines(str(i)+'\n')
