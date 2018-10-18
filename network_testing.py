@@ -17,7 +17,7 @@ G.number_of_nodes()
 
 # %%
 #betwn = nx.betweenness_centrality(G)
-with open('C:/Users/jimta/Desktop/group_test.tab','r') as file:
+with open('C:/Users/jimta/Desktop/potential_targets_2.txt','r') as file:
     sub = file.readlines()
 
 newsub = [s.strip('\n') for s in sub]

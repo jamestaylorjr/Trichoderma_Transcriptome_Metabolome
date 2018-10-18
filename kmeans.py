@@ -3,7 +3,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
-
+plt.style.use('gadfly')
 # %%
 # this cell from https://github.com/joaofig/auto-k-means
 import math
@@ -53,7 +53,7 @@ class KEstimator:
 
 # %%
 
-FILEPATH = "C:/Users/jimta/Documents/kmeans_data.csv"
+FILEPATH = "C:/Users/jimta/Desktop/potential_targets.txt"
 data = pd.read_csv(FILEPATH, names =['gene','fungus','maize'])
 full_data = data
 data = data.drop(['gene'],axis=1)
@@ -61,7 +61,7 @@ data = data.drop(['gene'],axis=1)
 # %% Estimate optimal number of clusters for KMeans
 s_k = []
 
-for k in range(1,51):
+for k in range(1,len(data)-1):
     km = KMeans(n_clusters=k).fit(data)
     s_k.append(km.inertia_)
 
@@ -73,7 +73,8 @@ print('riddle : {0}'.format(riddle_estimator.K))
 m_k = riddle_estimator.K
 
 # %%
-kmeans = KMeans(n_clusters=m_k)
+#kmeans = KMeans(n_clusters=m_k)
+kmeans = KMeans()
 kmeans.fit(data)
 
 labels = kmeans.predict(data)
@@ -88,9 +89,10 @@ X = [centroids[i][0] for i, j in enumerate(centroids)]
 y = [centroids[i][1] for i, j in enumerate(centroids)]
 plt.subplot(121)
 plt.scatter(X,y,c='Orange')
+'''
 for i in range(0,m_k-1):
     plt.annotate(i,(X[i],y[i]))
-
+'''
 plt.show()
 
 # %%
@@ -118,6 +120,6 @@ for i, g in enumerate(full_data['group']):
 group_list= [list(groups[g].dropna()) for g in groups]
 
 # %%
-with open('list_of_groups.txt','w') as output:
+with open('list_of_groups_2.txt','w') as output:
     for i in group_list:
         output.writelines(str(i)+'\n')
