@@ -17,21 +17,27 @@ G.number_of_nodes()
 
 # %%
 #betwn = nx.betweenness_centrality(G)
-with open('C:/Users/jimta/Desktop/potential_targets_2.txt','r') as file:
+'''
+with open('C:/Users/jimta/Desktop/potential_targets_effectorsonly.txt','r') as file:
     sub = file.readlines()
 
 newsub = [s.strip('\n') for s in sub]
+'''
+newsub = pd.read_csv('C:/Users/jimta/Desktop/DBSCAN_groups_effectoronly.csv')
 
-final_sub = [n for n in newsub if n in nx.nodes(G)]
+newsub.head()
+newsub = newsub.drop(newsub.columns[0],axis=1)
 
 # %%
-connect = []
-for x in final_sub:
-    btw = nx.betweenness_centrality_subset(G,[x],nx.nodes(G))
-    m = statistics.mean(btw.values())
-    connect.append(m)
-print(final_sub[connect.index(sorted(connect,reverse=True)[2])])
-print(final_sub[connect.index(max(connect))],max(connect))
+for x in newsub:
+    final_sub = [n for n in newsub[x] if n in nx.nodes(G)]
+    connect = []
+    for z in final_sub:
+        btw = nx.betweenness_centrality_subset(G,[z],nx.nodes(G))
+        m = statistics.mean(btw.values())
+        connect.append(m)
+    print(final_sub[connect.index(max(connect))],max(connect))
 
 # %% Don't run this cell. It takes forever for very little payoff.
 #nx.draw(G)
+print(connect[final_sub.index("TRIVIDRAFT_18067")])

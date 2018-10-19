@@ -18,12 +18,11 @@ def plot_clusters(data, algorithm, args, kwds):
     frame = plt.gca()
     frame.axes.get_xaxis().set_visible(False)
     frame.axes.get_yaxis().set_visible(False)
-    plt.title('Clusters found by {}'.format(str(algorithm.__name__)), fontsize=24)
-    plt.text(-0.5, 0.7, 'Clustering took {:.2f} s'.format(end_time - start_time), fontsize=14)
-
+    plt.title('Clusters found by {}'.format(str(algorithm.__name__)), fontsize=10)
+    print('Clustering took {:.2f} s'.format(end_time - start_time))
     return labels
-# %%
 
+# %%
 FILEPATH = "C:/Users/jimta/Desktop/fc_degs.txt"
 data = pd.read_csv(FILEPATH, names =['gene','6hr','12hr'])
 full_data = data
@@ -35,17 +34,16 @@ frame.axes.get_xaxis().set_visible(True)
 frame.axes.get_yaxis().set_visible(True)
 
 # %%
-
 label = plot_clusters(data, DBSCAN, (), {'eps':0.37})
-
 full_data['group'] = label
 
-print(full_data.head())
-
-print(len(np.unique(label)))
 # %%
 groups = []
 for i in np.unique(label):
     g = [full_data['gene'][x] for x, v in enumerate(full_data['group']) if v == i]
     groups.append(g)
-print(len(groups))
+
+# %%
+group_df = pd.DataFrame(groups)
+group_df = group_df.transpose()
+group_df.to_csv('C:/Users/jimta/Desktop/DBSCAN_groups_effectoronly.csv')
