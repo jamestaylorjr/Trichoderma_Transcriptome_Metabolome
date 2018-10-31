@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import DBSCAN
 import seaborn as sns
 import time
+from mpl_toolkits.mplot3d import Axes3D
+
 plt.style.use('gadfly')
 plot_kwds = {'alpha' : 0.25, 's' : 80, 'linewidths':0}
 
@@ -25,6 +27,23 @@ def plot_clusters(datax,datay,subplot, algorithm, args, kwds):
     print('Clustering took {:.2f} s'.format(end_time - start_time))
     return labels
 
+def plot_clusters_3d(datax,datay,dataz,subplot, algorithm, args, kwds):
+    start_time = time.time()
+    data_pred = pd.DataFrame([datax,datay,dataz]).transpose()
+    cnames = list(data_pred)
+    labels = algorithm(*args, **kwds).fit_predict(data_pred)
+    end_time = time.time()
+    palette = sns.color_palette('deep', np.unique(labels).max() + 1)
+    colors = [palette[x] if x >= 0 else (0.0, 0.0, 0.0) for x in labels]
+    fig2 = plt.figure(figsize=(10,10))
+    ax = fig2.add_subplot(221, projection="3d")
+    ax.scatter(datax, datay,dataz, c=colors)
+    frame = plt.gca()
+    frame.axes.get_xaxis().set_visible(False)
+    frame.axes.get_yaxis().set_visible(False)
+    plt.title('{} vs {} clusters'.format(cnames[0],cnames[1]), fontsize=10)
+    print('Clustering took {:.2f} s'.format(end_time - start_time))
+    return labels
 # %%
 FILEPATH = "C:/Users/jimta/Desktop/fc_secreted_degs.txt"
 data = pd.read_csv(FILEPATH, names =['gene','6hr','12hr','15hr','24hr','36hr'])
@@ -59,3 +78,10 @@ group_df.columns = ['6v12','12v15','15v24','24v36']
 
 for comp in list(group_df):
     group_df[comp].to_csv('C:/Users/jimta/Desktop/{}_DBSCAN_groups_secretedonly.csv'.format(comp))
+
+# %%
+#attempt 3d PCA Clustering
+data3d = pd.read_csv('C:/Users/jimta/Desktop/PCA.csv')
+data3d.head()
+label3d = plot_clusters_3d(data3d['Principal Component 0'],data3d['Principal Component 1'],data3d['Principal Component 2'],221, DBSCAN,(),{'eps':7.8})
+print(np.unique(label3d))

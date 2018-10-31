@@ -24,9 +24,9 @@ pca = PCA(n_components=2)
 principalComponents = pca.fit_transform(x)
 
 principalDF = pd.DataFrame(data=principalComponents, columns = ['principal component 1','principal component 2'])
-
+pca.explained_variance_ratio_
 finalDf = pd.concat([principalDF,df[['target']]],axis=1)
-
+finalDf.head()
 fig = plt.figure(figsize=(8,8))
 ax = fig.add_subplot(1,1,1)
 ax.set_xlabel('Principal Component 1')
@@ -39,9 +39,24 @@ ax.grid()
 
 
 # %%
+from mpl_toolkits.mplot3d import Axes3D
+pca2 = PCA(.95)
 
-pca2 = PCA(.99)
+pc2 = pca2.fit_transform(x)
+pca2.explained_variance_ratio_
+pca2.n_components_
+pDf2 = pd.DataFrame(data=pc2, columns=['Principal Component {}'.format(z) for z in range(pca2.n_components_)])
+finalDf2 = pd.concat([pDf2,df[['target']]],axis=1)
+finalDf2.head()
+finalDf2.to_csv('C:/Users/jimta/Desktop/PCA.csv')
 
-pca.fit(x2)
-
-pca.n_components_
+fig2 = plt.figure(figsize=(10,10))
+ax = fig2.add_subplot(221, projection="3d")
+ax.set_xlabel('Principal Component 0')
+ax.set_ylabel('Principal Component 1')
+ax.set_zlabel('Principal Component 2')
+ax.set_title('3 component PCA')
+ax.scatter(finalDf2['Principal Component 0'],finalDf2['Principal Component 1'],finalDf2['Principal Component 2'])
+ax2 = fig2.add_subplot(222)
+ax2.bar(['PC{}'.format(z) for z in range(pca2.n_components_)],pca2.explained_variance_ratio_)
+fig2.show()
