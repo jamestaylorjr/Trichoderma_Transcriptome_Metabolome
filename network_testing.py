@@ -23,21 +23,30 @@ with open('C:/Users/jimta/Desktop/potential_targets_effectorsonly.txt','r') as f
 
 newsub = [s.strip('\n') for s in sub]
 '''
-newsub = pd.read_csv('C:/Users/jimta/Desktop/DBSCAN_groups_effectoronly.csv')
+newsub = pd.read_csv('C:/Users/jimta/Desktop/15v24_DBSCAN_groups_effectoronly.csv', header=None)
 
 newsub.head()
-newsub = newsub.drop(newsub.columns[0],axis=1)
 
+
+#
+comparisons = ['6v12','12v15','15v24','24v36']
+hub_genes = pd.DataFrame(index=range(10))
+for x in comparisons:
+    hub_holder = []
+    newsub = pd.read_csv('C:/Users/jimta/Desktop/{}_DBSCAN_groups_secretedonly.csv'.format(x), header=None)
+    for y in newsub:
+        final_sub = [n for n in newsub[y] if n in nx.nodes(G)]
+        if len(final_sub) != 0:
+            connect = []
+            for z in final_sub:
+                btw = nx.betweenness_centrality_subset(G,[z],nx.nodes(G))
+                m = statistics.mean(btw.values())
+                connect.append(m)
+            print(final_sub[connect.index(max(connect))])
+            hub_holder.append(final_sub[connect.index(max(connect))])
+    df_holder = pd.DataFrame(hub_holder, columns=[x])
+    hub_genes= hub_genes.join(df_holder)
+
+print(hub_genes.head())
 # %%
-for x in newsub:
-    final_sub = [n for n in newsub[x] if n in nx.nodes(G)]
-    connect = []
-    for z in final_sub:
-        btw = nx.betweenness_centrality_subset(G,[z],nx.nodes(G))
-        m = statistics.mean(btw.values())
-        connect.append(m)
-    print(final_sub[connect.index(max(connect))],max(connect))
-
-# %% Don't run this cell. It takes forever for very little payoff.
-#nx.draw(G)
-print(connect[final_sub.index("TRIVIDRAFT_18067")])
+hub_genes.to_csv('C:/Users/jimta/Desktop/first_hubs_secreted.csv')
